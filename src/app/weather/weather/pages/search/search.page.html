@@ -1,0 +1,54 @@
+<div class="wrapper">
+    <div>
+        <form class="example-form">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Search City</mat-label>
+                <input type="text" aria-label="Number" matInput [formControl]="myControl" (input)="searchLoaction()"
+                    [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="displayCityName"
+                    (optionSelected)="selectedCity($event.option.value)">
+                    <mat-option *ngFor="let option of options$ |async" [value]="option">
+                        {{option.LocalizedName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="flex-column" *ngIf="currentCity && forecast">
+        <mat-icon *ngIf="isInFavorite">favorite</mat-icon>
+        <h2>{{currentCity.LocalizedName}}</h2>
+        <div class="flex-column">
+            <span>Day: {{forecast.DailyForecasts[0].Day.IconPhrase}}</span>
+            <span>Night: {{forecast.DailyForecasts[0].Night.IconPhrase}}</span>
+            <div class="flex-row">
+                <div class="flex-column">
+                    <span class="temp">Minimum: {{forecast.DailyForecasts[0].Temperature.Minimum.Value}}</span>
+                    <span class="temp">Maximum: {{forecast.DailyForecasts[0].Temperature.Maximum.Value}}</span>
+                </div>
+                <div>
+                    <mat-radio-group color="primary" class="example-radio-group" aria-label="Select an option"
+                        (change)="unitTempChange()">
+                        <mat-radio-button>Celsius</mat-radio-button>
+                        <mat-radio-button value="always">Fahrenheit</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row-card">
+            <mat-card style="margin: 0.3vw;" class="flex-column" *ngFor="let day of forecast.DailyForecasts">
+                <span>{{day.Date|date:'EEEE'}}</span>
+                <div style="display: flex;">
+                    <span class="temp">{{day.Temperature.Minimum.Value}}</span>
+                    <span class="temp"> - {{day.Temperature.Maximum.Value}}</span></div>
+                
+            </mat-card>
+        </div>
+        <div>
+            <button (click)="addOrDeleteFavorite()" mat-stroked-button color="primary">
+                <span *ngIf="isInFavorite">delete from favorite </span>
+                <span *ngIf="!isInFavorite">add to favorite </span>
+                <mat-icon> favorite</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

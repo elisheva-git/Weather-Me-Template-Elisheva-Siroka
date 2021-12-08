@@ -1,0 +1,15 @@
+<div *ngIf="currentWeatherFavorites.length>0" class="flex-column">
+    <span style="font-weight: bold;">Favorites</span>
+    <div style="display: flex;flex-wrap: wrap;justify-content: center">
+        <mat-card  class="flex-column"  *ngFor="let favorite of favorites;let i=index">
+            <div routerLink="../search/{{favorite.Key}}" class="flex-column" >
+                <div style="font-weight: bold;">{{favorite.LocalizedName}}</div>
+                <div>{{currentWeatherFavorites[i].WeatherText}}</div>
+                <div class="temp">{{currentWeatherFavorites[i].Temperature.Metric.Value}}</div>
+            </div>
+            <button (click)="deleteFavorite(favorite)" color="primary" mat-mini-fab>
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-card>
+    </div>
+</div>
