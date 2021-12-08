@@ -9,7 +9,7 @@ import { CurrentWeather } from 'src/app/shared/models/currentWeather.model';
 import { FavoritesService } from 'src/app/core/services/favorites.service';
 import { Forecast } from 'src/app/shared/models/forecast.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError } from 'rxjs/operators';
+import { catchError, debounceTime, tap } from 'rxjs/operators';
 
 //the default - Tel Aviv key
 const DEFAULT_CITY_KEY = "215854"
@@ -56,19 +56,23 @@ export class SearchPage {
         })
       }
     })
+    //improve the serching with debounceTime
+    this.myControl.valueChanges.pipe(
+      debounceTime(500),
+      tap(val => console.log(val))
+    ).subscribe(data => {
+      this.options$ = this._locationService.getAutocompleteLocation(this.myControl.value).pipe(
+        catchError(err => this.errorOnKeyPress)
+      )
+    }
+    );
   }
 
   displayCityName(location: Location): string {
     return location && location.LocalizedName ? location.LocalizedName : '';
   }
 
-  searchLoaction() {
-    this.options$ = this._locationService.getAutocompleteLocation(this.myControl.value).pipe(
-      catchError(err=> this.errorOnKeyPress)
-    )
-  }
-
-  errorOnKeyPress(){
+  errorOnKeyPress() {
     this.openDialogError("oops fault, please Enter data again")
   }
 
@@ -76,7 +80,7 @@ export class SearchPage {
     this.currentCity = cityChoose;
     this._weatherService.getForecast(cityChoose.Key).subscribe(forecast_ => {
       this.forecast = forecast_
-    },err=>{
+    }, err => {
       this.openDialogError("Oops, fault please try again")
     })
     this.isInFavorite = this._favoriteService.isInFavorite(this.currentCity.Key)
@@ -97,7 +101,7 @@ export class SearchPage {
     this._weatherService.isMetric = !this._weatherService.isMetric
     this._weatherService.getForecast(this.currentCity.Key).subscribe(forecast_ => {
       this.forecast = forecast_
-    },err=>{
+    }, err => {
       this.openDialogError("Oops, fault please try again")
     })
   }
