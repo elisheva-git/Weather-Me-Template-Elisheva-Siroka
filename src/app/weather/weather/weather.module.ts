@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocationService } from 'src/app/core/services/location.service';
 import { WeatherService } from 'src/app/core/services/weather.service';
 import { FavoritesService } from 'src/app/core/services/favorites.service';
+import { ForecastComponent } from './pages/forecast/forecast.component';
 
 
 
 @NgModule({
   declarations: [
     SearchPage, 
-    FavoritesPage
+    FavoritesPage,
+    ForecastComponent
   ],
   imports: [
     CommonModule,

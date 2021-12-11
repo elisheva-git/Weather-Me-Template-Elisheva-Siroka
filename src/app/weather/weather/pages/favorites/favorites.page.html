@@ -1,4 +1,4 @@
-<div *ngIf="currentWeatherFavorites.length>0" class="flex-column">
+<div *ngIf="favorites&&currentWeatherFavorites" class="flex-column">
     <span style="font-weight: bold;">Favorites</span>
     <div style="display: flex;flex-wrap: wrap;justify-content: center">
         <mat-card  class="flex-column"  *ngFor="let favorite of favorites;let i=index">

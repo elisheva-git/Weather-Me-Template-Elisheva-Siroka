@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FavoritesService } from 'src/app/core/services/favorites.service';
 import { Location } from 'src/app/shared/models/location.model';
 import { CurrentWeather } from 'src/app/shared/models/currentWeather.model';
@@ -13,13 +13,18 @@ import { WeatherService } from 'src/app/core/services/weather.service';
 export class FavoritesPage implements OnInit{
   favorites:Location[]
   //list of current weather to each favorite according to favorites list
-  currentWeatherFavorites:CurrentWeather[]=[]
+  currentWeatherFavorites:CurrentWeather[]
 
   constructor(private _favoritesService:FavoritesService,private _weatherService:WeatherService){
   }
 
   ngOnInit(): void {
+    this.getFavoritesAndForecast()
+  }
+
+  getFavoritesAndForecast(){
     this.favorites=this._favoritesService.getFavorites()
+    this.currentWeatherFavorites=[]
     this.favorites.forEach(f=>{
       this._weatherService.getCurrentWeather(f.Key).subscribe(weather=>{
         this.currentWeatherFavorites.push(weather[0])
@@ -29,6 +34,6 @@ export class FavoritesPage implements OnInit{
 
   deleteFavorite(favorite:Location){
     this._favoritesService.removeFromFavorites(favorite.Key)
+    this.getFavoritesAndForecast()
   }
-
 }

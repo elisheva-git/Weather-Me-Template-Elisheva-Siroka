@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { LocationService } from 'src/app/core/services/location.service';
@@ -12,6 +12,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, debounceTime, tap } from 'rxjs/operators';
 
 //the default - Tel Aviv key
+//If the user does not confirm the Identify of the place or the Identify does not work 
+//so it use the default
 const DEFAULT_CITY_KEY = "215854"
 
 @Component({
@@ -19,10 +21,10 @@ const DEFAULT_CITY_KEY = "215854"
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss']
 })
-export class SearchPage {
+export class SearchPage implements OnInit,OnDestroy{
   myControl = new FormControl();
   options$: Observable<Location[]>;
-  currentCity: Location
+  currentCity: Location=null
   forecast: Forecast
   isInFavorite: boolean
 
@@ -30,6 +32,7 @@ export class SearchPage {
     private _acr: ActivatedRoute, private _weatherService: WeatherService, private _snackBar: MatSnackBar) {
 
   }
+ 
   ngOnInit() {
     this._acr.paramMap.subscribe(params => {
       if (params.has("locationKey")) {
@@ -48,6 +51,7 @@ export class SearchPage {
           }), (_err: any) => {
             this._locationService.getLocationByKey(DEFAULT_CITY_KEY).subscribe(city => {
               this.selectedCity(city)
+              return
             })
           };
         }
@@ -58,14 +62,17 @@ export class SearchPage {
     })
     //improve the serching with debounceTime
     this.myControl.valueChanges.pipe(
-      debounceTime(500),
-      tap(val => console.log(val))
+      debounceTime(500)
     ).subscribe(data => {
       this.options$ = this._locationService.getAutocompleteLocation(this.myControl.value).pipe(
         catchError(err => this.errorOnKeyPress)
       )
     }
     );
+  }
+
+  ngOnDestroy(): void {
+    
   }
 
   displayCityName(location: Location): string {
@@ -76,34 +83,10 @@ export class SearchPage {
     this.openDialogError("oops fault, please Enter data again")
   }
 
+
   selectedCity(cityChoose: Location) {
+    console.log(cityChoose.LocalizedName)
     this.currentCity = cityChoose;
-    this._weatherService.getForecast(cityChoose.Key).subscribe(forecast_ => {
-      this.forecast = forecast_
-    }, err => {
-      this.openDialogError("Oops, fault please try again")
-    })
-    this.isInFavorite = this._favoriteService.isInFavorite(this.currentCity.Key)
-  }
-
-  addOrDeleteFavorite() {
-    if (this.isInFavorite) {
-      this._favoriteService.removeFromFavorites(this.currentCity.Key)
-    }
-    else {
-      this._favoriteService.addToFavorites(this.currentCity)
-    }
-    this.isInFavorite = !this.isInFavorite
-  }
-
-  //change the temperature from Celsius/Fahrenheit
-  unitTempChange() {
-    this._weatherService.isMetric = !this._weatherService.isMetric
-    this._weatherService.getForecast(this.currentCity.Key).subscribe(forecast_ => {
-      this.forecast = forecast_
-    }, err => {
-      this.openDialogError("Oops, fault please try again")
-    })
   }
 
   openDialogError(message: string, action: string = "x") {

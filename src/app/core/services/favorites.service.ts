@@ -17,7 +17,6 @@ export class FavoritesService {
   }
 
   addToFavorites(location: Location): void {
-    // this.favorites.push(location);
     this.getFavoritesFromLocalStorage()
     this.favorites.push(location);
     localStorage.setItem("favoritesLocations",JSON.stringify(this.favorites))
@@ -25,9 +24,10 @@ export class FavoritesService {
 
   removeFromFavorites(locationKey: string): void {
     this.getFavoritesFromLocalStorage()
+    debugger
     const cityToRemoveIndex = this.favorites.findIndex((favorite) => favorite.Key === locationKey);
     this.favorites.splice(cityToRemoveIndex, 1);
-    localStorage.setItem("favorites",JSON.stringify(this.favorites))
+    localStorage.setItem("favoritesLocations",JSON.stringify(this.favorites))
   }
 
   getFavorites(): Location[] {

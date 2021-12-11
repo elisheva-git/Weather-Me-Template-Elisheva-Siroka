@@ -13,49 +13,5 @@
             </mat-form-field>
         </form>
     </div>
-    <div class="flex-column" *ngIf="currentCity && forecast">
-        <mat-icon *ngIf="isInFavorite">favorite</mat-icon>
-        <h2>{{currentCity.LocalizedName}}</h2>
-        <mat-chip-list>
-            <mat-chip color="primary" selected>{{forecast.DailyForecasts[0].Date | date}}</mat-chip>
-        </mat-chip-list>
-        <h3 color="primary">{{forecast.DailyForecasts[0].Day.IconPhrase}}</h3>
-        <div class="flex-row" style="width: 30vw;justify-content: space-around;">
-            <div class="flex-column">
-                <span>Minimum: </span>
-                <button mat-fab color="primary">
-                    <span class="temp">{{forecast.DailyForecasts[0].Temperature.Minimum.Value}}</span>
-                </button>
-            </div>
-            <div>
-                <mat-radio-group color="primary" class="example-radio-group" aria-label="Select an option"
-                    (change)="unitTempChange()">
-                    <mat-radio-button>Celsius</mat-radio-button>
-                    <mat-radio-button value="always">Fahrenheit</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div class="flex-column">
-                <span>Maximum: </span>
-                <button mat-fab color="primary">
-                    <span class="temp">{{forecast.DailyForecasts[0].Temperature.Maximum.Value}}</span>
-                </button>
-            </div>
-        </div>
-        <div class="flex-row-card">
-            <mat-card style="margin: 0.3vw;" class="flex-column" *ngFor="let day of forecast.DailyForecasts">
-                <span>{{day.Date|date:'EEEE'}}</span>
-                <div style="display: flex;">
-                    <span class="temp">{{day.Temperature.Minimum.Value}}</span>
-                    <span class="temp"> - {{day.Temperature.Maximum.Value}}</span></div>
-
-            </mat-card>
-        </div>
-        <div>
-            <button (click)="addOrDeleteFavorite()" mat-stroked-button color="primary">
-                <span *ngIf="isInFavorite">delete from favorite </span>
-                <span *ngIf="!isInFavorite">add to favorite </span>
-                <mat-icon> favorite</mat-icon>
-            </button>
-        </div>
-    </div>
+    <app-forecast [currentCity]="currentCity"></app-forecast>
 </div>

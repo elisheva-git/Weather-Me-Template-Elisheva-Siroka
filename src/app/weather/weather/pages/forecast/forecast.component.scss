@@ -1,0 +1,29 @@
+
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .flex-row-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 3vw;
+  }
+  .example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+
+  .temp:after{
+    content:"°";
+  }
