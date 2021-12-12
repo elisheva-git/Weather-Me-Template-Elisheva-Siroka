@@ -27,11 +27,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  changeTemperatureUnit() {
-    this.weatherService.isMetric = !this.weatherService.isMetric;
-
-    this.weatherService.temperatureUnitChanged.next();
-  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
   .pipe(

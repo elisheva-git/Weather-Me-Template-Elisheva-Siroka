@@ -44,7 +44,8 @@ export class SearchPage implements OnInit,OnDestroy{
         //Initializes the location to the user's current location
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((position) => {
-            this._locationService.getGeoposition(position.coords.latitude, position.coords.longitude).subscribe(data => {
+            this._locationService.getGeoposition(position.coords.latitude, position.coords.longitude)
+            .subscribe(data => {
               this.selectedCity(data)
               return
             })
@@ -54,10 +55,11 @@ export class SearchPage implements OnInit,OnDestroy{
               return
             })
           };
+        }else{
+          this._locationService.getLocationByKey(DEFAULT_CITY_KEY).subscribe(city => {
+            this.selectedCity(city)
+          })
         }
-        this._locationService.getLocationByKey(DEFAULT_CITY_KEY).subscribe(city => {
-          this.selectedCity(city)
-        })
       }
     })
     //improve the serching with debounceTime
