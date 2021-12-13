@@ -5,8 +5,10 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar></mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/search">Search</a>
-      <a mat-list-item routerLink="/favorites">Favorites</a>
+      <a mat-list-item routerLink="/search">
+        <mat-icon color="primary">search</mat-icon>Search</a>
+      <a mat-list-item routerLink="/favorites">
+        <mat-icon color="primary">favorite_border</mat-icon>Favorites</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content [ngClass]="{'dark':color=='dark'}">
